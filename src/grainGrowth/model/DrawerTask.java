@@ -1,0 +1,108 @@
+package grainGrowth.model;
+
+import javafx.application.Platform;
+import javafx.concurrent.Task;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.canvas.GraphicsContext;
+
+
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.util.List;
+
+
+public class DrawerTask extends Task {
+    private GraphicsContext gc;
+    private Simulation simulation;
+    private BufferedImage bi;
+    private List<Color> colorList;
+    private int width;
+    private int height;
+    private int dt = 50;
+    private boolean enabled = true;
+
+    /**
+     * Creating task to do the calculations and update canvas
+     * @param gc graphics context on which the animation is displayed
+     * @param simulation reference to simulation class with prepared data
+     * @param bi buffered image to be drawn on
+     * @param width width of a grain
+     * @param height height of a grain
+     */
+    public DrawerTask(GraphicsContext gc, Simulation simulation, BufferedImage bi, int width,int height,List<Color> colorList){
+        this.gc = gc;
+        this.simulation = simulation;
+        this.bi = bi;
+        this.width = width;
+        this.height = height;
+        this.colorList = colorList;
+    }
+
+    /**
+     * Method that will animate the process of grains growth on the canvas
+     * @return
+     * @throws Exception
+     */
+    @Override
+    protected Object call() throws Exception {
+
+        while(true) {
+            simulation.nextIteration();
+            //System.out.println("Wyliczono");
+            updateCanvasShowing();
+            Thread.sleep(dt);
+            if(!enabled)
+            {
+                synchronized (this) {
+                    wait();
+                    //enabled = true;
+                }
+            }
+            if(Thread.currentThread().isInterrupted())
+            {
+                //System.out.println("Ending thread");
+
+                break;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Negates the enabled boolean
+     * @return The value of changed boolean
+     */
+    public boolean changeTheEnabledBooleanValue()
+    {
+        enabled = !enabled;
+        return enabled;
+    }
+
+    /**
+     * Updating the canvas state through the graphic context, draws the state of each grain on canvas
+     */
+    private void updateCanvasShowing()
+    {
+        for (int i = 0; i < simulation.getGrainsContainer().getnX(); i++) {
+            for (int j = 0; j < simulation.getGrainsContainer().getnY(); j++) {
+                if(simulation.getGrainsContainer().getTheCellState(i,j)>0)
+                {
+                    for (int k = 0; k < width; k++) {
+                        for (int l = 0; l < height; l++) {
+                            bi.setRGB(i*width+k,j*height+l,colorList.get(simulation.getGrainsContainer().getTheCellState(i,j)).getRGB());
+                        }
+                    }
+                    //bi.setRGB(i,j,Color.BLUE.getRGB());
+                }
+            }
+        }
+        Platform.runLater(() ->
+                gc.drawImage(SwingFXUtils.toFXImage(bi, null), 0,0 )
+        );
+
+    }
+
+    public void setDt(int dt) {
+        this.dt = dt;
+    }
+}
