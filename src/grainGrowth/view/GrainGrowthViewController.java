@@ -105,8 +105,14 @@ public class GrainGrowthViewController {
         int indY = (int)event.getY()/height;
 
         Random random = new Random();
-        grainsContainer.setCellState(indX,indY,colorList.size());
-        colorList.add(new Color(random.nextInt(255),random.nextInt(255),random.nextInt(255)));
+        if(grainsContainer.getTheCellState(indX,indY) > 0) {
+            grainsContainer.setCellState(indX, indY, 0);
+            setCanvasBackround(colorList.get(0));
+        }
+        else {
+            grainsContainer.setCellState(indX, indY, colorList.size());
+            colorList.add(new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255)));
+        }
         updateCanvasShowing();
     }
 
