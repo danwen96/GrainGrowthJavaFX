@@ -1,9 +1,13 @@
 package grainGrowth.model;
 
+import java.util.Random;
+
 public class GrainsContainer {
     private Grain[][] grains;
     private int nX;
     private int nY;
+    private int idsPoolNumber;
+
 
     /**
      * Constructor of a container for grains
@@ -65,6 +69,17 @@ public class GrainsContainer {
     public int getTheCellState(int i,int j)
     {
         return grains[i][j].getState();
+    }
+
+    /**
+     * Returning the next state of a particular cell
+     * @param i x index in tab
+     * @param j y index in tab
+     * @return the state of the cell
+     */
+    public int getTheNextCellState(int i,int j)
+    {
+        return grains[i][j].getNextState();
     }
 
     /**
@@ -179,11 +194,75 @@ public class GrainsContainer {
         }
     }
 
+    /**
+     * Fill the all tab with the random IDS
+     * @param IDsPOOL The pool of the IDS to be drawn
+     */
+    public void fillTheEntireGrainsContainerWithRandomIDs(int IDsPOOL)
+    {
+        int drawnId;
+        Random random = new Random();
+        for (int i = 0; i < nX; i++) {
+            for (int j = 0; j < nY; j++) {
+                drawnId = random.nextInt(IDsPOOL)+1;
+                grains[i][j].setState(drawnId);
+                grains[i][j].setNextState(drawnId);
+            }
+        }
+    }
+
+    public void setTheEnergy(int i,int j,int energy)
+    {
+        grains[i][j].setEnergy(energy);
+    }
+
+    public void setTheNextEnergy(int i,int j,int nextEnergy)
+    {
+        grains[i][j].setNextEnergy(nextEnergy);
+    }
+
+    /**
+     * Update state to the next value if the next energy of the grain is lesser than the actual
+     */
+    public void updateStatesBasedOnEnergyValues()
+    {
+        for (int i = 0; i < nX; i++) {
+            for (int j = 0; j < nY; j++) {
+                grains[i][j].updateStateBasedOnEnergy();
+            }
+        }
+    }
+
+    /**
+     * Finds the number of grains IDs present in this container, and writes it value to idsPoolNumber variable
+     */
+    public void findTheNumberOfIDs()
+    {
+        int max = 0;
+        for(int i=0;i<nX;i++){
+            for (int j = 0; j < nY; j++) {
+                if(grains[i][j].getState() > max)
+                {
+                    max = grains[i][j].getState();
+                }
+            }
+        }
+        idsPoolNumber = max;
+    }
+
     public int getnX() {
         return nX;
     }
 
     public int getnY() {
         return nY;
+    }
+
+    public int getIdsPoolNumber() {
+        return idsPoolNumber;
+    }
+
+    public void setIdsPoolNumber(int idsPoolNumber) {
+        this.idsPoolNumber = idsPoolNumber;
     }
 }

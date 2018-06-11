@@ -11,21 +11,27 @@
 <AnchorPane prefHeight="1010.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="grainGrowth.view.GrainGrowthViewController">
    <children>
       <Canvas fx:id="canvas" height="1000.0" layoutX="14.0" layoutY="14.0" onMouseClicked="#handleMouseClick" width="1000.0" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
-      <Button fx:id="startButton" layoutX="1108.0" layoutY="27.0" mnemonicParsing="false" onAction="#handleStartButton" prefHeight="25.0" prefWidth="150.0" text="Start" />
-      <Button fx:id="pauseButton" layoutX="1108.0" layoutY="65.0" mnemonicParsing="false" onAction="#handlePauseButton" prefHeight="25.0" prefWidth="150.0" text="Pause" />
-      <Button fx:id="stopButton" layoutX="1108.0" layoutY="110.0" mnemonicParsing="false" onAction="#handleStopButton" prefHeight="25.0" prefWidth="150.0" text="Stop" />
-      <TextField layoutX="1074.0" layoutY="296.0" prefHeight="25.0" prefWidth="89.0" text="100" fx:id="xTabSizeTextField" />
-      <TextField fx:id="yTabSizeTextField" layoutX="1214.0" layoutY="296.0" prefHeight="25.0" prefWidth="89.0" text="100" />
-      <Label layoutX="1115.0" layoutY="263.0" text="X" />
-      <Label layoutX="1251.0" layoutY="263.0" text="Y" />
-      <Button fx:id="changeSizeButton" layoutX="1108.0" layoutY="347.0" mnemonicParsing="false" onAction="#handleChangeSizeButton" prefHeight="25.0" prefWidth="150.0" text="Change the table size" />
+      <Button fx:id="startButton" layoutX="1108.0" layoutY="66.0" mnemonicParsing="false" onAction="#handleStartButton" prefHeight="25.0" prefWidth="150.0" text="Start" />
+      <Button fx:id="pauseButton" layoutX="1108.0" layoutY="99.0" mnemonicParsing="false" onAction="#handlePauseButton" prefHeight="25.0" prefWidth="150.0" text="Pause" />
+      <Button fx:id="stopButton" layoutX="1108.0" layoutY="134.0" mnemonicParsing="false" onAction="#handleStopButton" prefHeight="25.0" prefWidth="150.0" text="Stop" />
+      <TextField layoutX="1075.0" layoutY="338.0" prefHeight="25.0" prefWidth="89.0" text="100" fx:id="xTabSizeTextField" />
+      <TextField fx:id="yTabSizeTextField" layoutX="1207.0" layoutY="338.0" prefHeight="25.0" prefWidth="89.0" text="100" />
+      <Label layoutX="1116.0" layoutY="307.0" text="X" />
+      <Label layoutX="1248.0" layoutY="307.0" text="Y" />
+      <Button fx:id="changeSizeButton" layoutX="1108.0" layoutY="386.0" mnemonicParsing="false" onAction="#handleChangeSizeButton" prefHeight="25.0" prefWidth="150.0" text="Change the table size" />
       <TextField fx:id="numberOfGrainsTextField" layoutX="1093.0" layoutY="440.0" prefHeight="25.0" prefWidth="181.0" promptText="Number of grains to draw" />
       <Button fx:id="drawButton" layoutX="1161.0" layoutY="538.0" mnemonicParsing="false" onAction="#handleDrawButton" text="Draw" />
       <TextField fx:id="radiusTextField" layoutX="1093.0" layoutY="493.0" prefHeight="25.0" prefWidth="181.0" promptText="Radius" />
       <CheckBox fx:id="periodicallyCheckBox" layoutX="1142.0" layoutY="711.0" mnemonicParsing="false" onAction="#handleNeighbourhoodComboBoxSelection" text="Periodically" />
       <ComboBox fx:id="neighbourhood" layoutX="1109.0" layoutY="643.0" onAction="#handleNeighbourhoodComboBoxSelection" prefWidth="150.0" />
-      <TextField fx:id="dtField" layoutX="1139.0" layoutY="211.0" prefHeight="25.0" prefWidth="89.0" text="50" />
-      <Label layoutX="1144.0" layoutY="169.0" text="Time step (ms)" />
+      <TextField fx:id="dtField" layoutX="1139.0" layoutY="275.0" prefHeight="25.0" prefWidth="89.0" text="50" />
+      <Label layoutX="1144.0" layoutY="239.0" text="Time step (ms)" />
       <Button layoutX="1143.0" layoutY="587.0" mnemonicParsing="false" onAction="#handleDrawEvenlyButton" text="Draw evenly" />
+      <TextField fx:id="idsPoolNumberTextField" layoutX="1109.0" layoutY="753.0" promptText="Grains IDs pool number" />
+      <Button layoutX="1130.0" layoutY="792.0" mnemonicParsing="false" onAction="#handleEntireTableButton" text="Draw entire table" />
+      <ComboBox fx:id="simulationType" layoutX="1109.0" layoutY="27.0" onAction="#handleNeighbourhoodComboBoxSelection" prefWidth="150.0" />
+      <CheckBox fx:id="pauseAfterSetNumberOfIterationsCheckBox" layoutX="1079.0" layoutY="169.0" mnemonicParsing="false" text="Pause after set number of iterations" />
+      <TextField fx:id="numberOfIterationsTextField" layoutX="1109.0" layoutY="202.0" promptText="Number of iterations" />
+      <Label fx:id="statusLabel" layoutX="1151.0" layoutY="870.0" text="Waiting" />
    </children>
 </AnchorPane>

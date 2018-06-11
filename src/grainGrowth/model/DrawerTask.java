@@ -4,9 +4,10 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Label;
 
 
-import java.awt.Color;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
@@ -20,6 +21,8 @@ public class DrawerTask extends Task {
     private int height;
     private int dt = 50;
     private boolean enabled = true;
+    private int simulationCounter = -1;
+    private Label statusLabel;
 
     /**
      * Creating task to do the calculations and update canvas
@@ -28,14 +31,16 @@ public class DrawerTask extends Task {
      * @param bi buffered image to be drawn on
      * @param width width of a grain
      * @param height height of a grain
+     * @param statusLabel label to display status of the task
      */
-    public DrawerTask(GraphicsContext gc, Simulation simulation, BufferedImage bi, int width,int height,List<Color> colorList){
+    public DrawerTask(GraphicsContext gc, Simulation simulation, BufferedImage bi, int width,int height,List<Color> colorList, Label statusLabel){
         this.gc = gc;
         this.simulation = simulation;
         this.bi = bi;
         this.width = width;
         this.height = height;
         this.colorList = colorList;
+        this.statusLabel = statusLabel;
     }
 
     /**
@@ -46,22 +51,35 @@ public class DrawerTask extends Task {
     @Override
     protected Object call() throws Exception {
 
+        Platform.runLater(()->
+        statusLabel.setText("During simulation")
+        );
         while(true) {
             simulation.nextIteration();
             //System.out.println("Wyliczono");
             updateCanvasShowing();
             Thread.sleep(dt);
-            if(!enabled)
+            simulationCounter--;
+            if(!enabled || simulationCounter==0)
             {
                 synchronized (this) {
+                    enabled = false;
+                    Platform.runLater(()->
+                    statusLabel.setText("Paused")
+                    );
                     wait();
                     //enabled = true;
+                    Platform.runLater(()->
+                    statusLabel.setText("During simulation")
+                    );
                 }
             }
             if(Thread.currentThread().isInterrupted())
             {
                 //System.out.println("Ending thread");
-
+                Platform.runLater(()->
+                statusLabel.setText("Waiting")
+                );
                 break;
             }
         }
@@ -104,5 +122,9 @@ public class DrawerTask extends Task {
 
     public void setDt(int dt) {
         this.dt = dt;
+    }
+
+    public void setSimulationCounter(int simulationCounter) {
+        this.simulationCounter = simulationCounter;
     }
 }

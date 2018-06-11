@@ -8,6 +8,9 @@ public class Grain {
     private int state;
     private int nextState;
     private boolean overwritable = true;
+    private int energy;
+    private int nextEnergy;
+
 
     /**
      * @param i x id in the table
@@ -26,6 +29,14 @@ public class Grain {
     {
         this.state = this.nextState;
         //this.nextState = 0;
+    }
+
+    /**
+     * Rewrites the next generation state to actual state, if the next energy is lesser in this particular grain
+     */
+    public void updateStateBasedOnEnergy() {
+        if(nextEnergy <= energy)
+            setStateFromNextIteration();
     }
 
     public int getState() {
@@ -59,5 +70,21 @@ public class Grain {
 
     public void setOverwritable(boolean overwritable) {
         this.overwritable = overwritable;
+    }
+
+    public int getEnergy() {
+        return energy;
+    }
+
+    public void setEnergy(int energy) {
+        this.energy = energy;
+    }
+
+    public int getNextEnergy() {
+        return nextEnergy;
+    }
+
+    public void setNextEnergy(int nextEnergy) {
+        this.nextEnergy = nextEnergy;
     }
 }

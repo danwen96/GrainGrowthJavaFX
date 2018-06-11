@@ -20,6 +20,7 @@ public class MooreMethodImplementation implements NeighbourhoodMethodImplementat
 
     @Override
     public void nextIteration() {
+
         int indUp;
         int indDown;
         int indLeft;

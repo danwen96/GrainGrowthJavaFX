@@ -45,6 +45,16 @@ public class GrainGrowthViewController {
     private CheckBox periodicallyCheckBox;
     @FXML
     private TextField dtField;
+    @FXML
+    private ComboBox<String> simulationType;
+    @FXML
+    private TextField idsPoolNumberTextField;
+    @FXML
+    private CheckBox pauseAfterSetNumberOfIterationsCheckBox;
+    @FXML
+    private TextField numberOfIterationsTextField;
+    @FXML
+    private Label statusLabel;
 
     private GraphicsContext graphicsContext;
     private BufferedImage bi;
@@ -58,6 +68,7 @@ public class GrainGrowthViewController {
     private List<Color> colorList;
     private DrawerTask drawerTask;
     private Thread drawerThread;
+
 
 
     public GrainGrowthViewController(){};
@@ -77,6 +88,13 @@ public class GrainGrowthViewController {
                 "Pentagonal random"
         );
         neighbourhood.setValue("Moore");
+
+        simulationType.getItems().addAll(
+                "Naive grain growth",
+                "Monte Carlo"
+        );
+        simulationType.setValue("Naive grain growth");
+
         graphicsContext = canvas.getGraphicsContext2D();
 
         handleChangeSizeButton();
@@ -184,13 +202,20 @@ public class GrainGrowthViewController {
     @FXML
     public void handleStartButton() {
         if(drawerTask == null) {
-            drawerTask = new DrawerTask(graphicsContext, simulation, bi, width, height, colorList);
+            drawerTask = new DrawerTask(graphicsContext, simulation, bi, width, height, colorList,statusLabel);
             drawerTask.setDt(Integer.parseInt(dtField.getText()));
+
+            if(pauseAfterSetNumberOfIterationsCheckBox.isSelected())
+                drawerTask.setSimulationCounter(Integer.parseInt(numberOfIterationsTextField.getText()));
+            else
+                drawerTask.setSimulationCounter(-1);
+
             drawerThread = new Thread(drawerTask);
             drawerThread.start();
         }
         else {
             drawerTask.setDt(Integer.parseInt(dtField.getText()));
+
             handlePauseButton();
         }
     }
@@ -204,6 +229,10 @@ public class GrainGrowthViewController {
         if(drawerTask != null)
         synchronized (drawerTask) {
             if (drawerTask.changeTheEnabledBooleanValue())
+                if(pauseAfterSetNumberOfIterationsCheckBox.isSelected())
+                    drawerTask.setSimulationCounter(Integer.parseInt(numberOfIterationsTextField.getText()));
+                else
+                    drawerTask.setSimulationCounter(-1);
                 drawerTask.notify();
         }
     }
@@ -334,7 +363,6 @@ public class GrainGrowthViewController {
         }
 
         updateCanvasShowing();
-
     }
 
     /**
@@ -342,7 +370,23 @@ public class GrainGrowthViewController {
      */
     @FXML
     public void handleNeighbourhoodComboBoxSelection(){
-        simulation.changeNeighbourhoodMethod(neighbourhood.getValue(),periodicallyCheckBox.isSelected());
+        grainsContainer.findTheNumberOfIDs();
+        simulation.changeNeighbourhoodMethod(neighbourhood.getValue(),simulationType.getValue(),periodicallyCheckBox.isSelected());
+    }
+
+    @FXML
+    public void handleEntireTableButton() throws InterruptedException {
+        int idsPoolNumber = Integer.parseInt(idsPoolNumberTextField.getText());
+        handleChangeSizeButton();
+
+        Random random = new Random();
+        grainsContainer.fillTheEntireGrainsContainerWithRandomIDs(idsPoolNumber);
+        for (int i = 0; i < idsPoolNumber; i++) {
+            colorList.add(new Color(random.nextInt(255),random.nextInt(255),random.nextInt(255)));
+        }
+
+        updateCanvasShowing();
+        handleNeighbourhoodComboBoxSelection();
     }
 
 
